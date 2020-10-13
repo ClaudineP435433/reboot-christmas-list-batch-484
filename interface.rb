@@ -17,6 +17,7 @@ loop do
   puts "2 - Add a gift"
   puts "3 - Delete a gift"
   puts "4 - Mark as bought a gift"
+  puts "5 - Import gift from ETSY"
   puts "0 - Exit List"
 
   action = gets.chomp
@@ -26,6 +27,7 @@ loop do
   when '2' then add_gift(GIFTS)
   when '3' then delete_gift(GIFTS)
   when '4' then mark_as_bought(GIFTS)
+  when '5' then import(GIFTS)
   when '0' then break
   else
     puts "RTFM"

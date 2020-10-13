@@ -1,3 +1,5 @@
+require_relative 'scrapper.rb'
+
 def display_list(gifts_list)
   # 1. iphone (800€) - [ ]
   # Iterer sur la gifts_list
@@ -48,21 +50,39 @@ end
 
 def delete_gift(gifts_list)
   # Afficher la liste
+  display_list(gifts_list)
   # Demander à l'utilisateur quel cadeau il veut supprimer
+  puts "What is the gift id you want to delete ?"
+  index = gets.chomp.to_i - 1
   # Récupérer l'index du cadeau à supprimer - attention au -1
+  gifts_list.delete_at(index)
   # Supprimer sur l'array/gifts_list.delete_at(index)
 end
 
 
 def mark_as_bought(gifts_list)
   # Afficher la liste
+  display_list(gifts_list)
   # Demander à l'utilisateur quel cadeau il veut marquer comme acheté
-  # Récupérer l'index du cadeau à supprimer - attention au -1
+  puts "What is the gift id you want to mark as bought ?"
+  # Récupérer l'index du cadeau à marquer comme acheté - attention au
+  index = gets.chomp.to_i - 1
   # Retrouver le gift dans la gift_list
+  gift = gifts_list[index]
+  gift[:bought] = true
+  # gifts_list[index][:bought] = true
   # Mettre à jour le gift/Hash , mettre à jour la valeur de sa clé [:bought]
 end
 
 
+def import(gifts_list)
+  # Demander à l'utilisateur le mot clé recherché
+  # Scrapper Etsy pour avoir une liste d'idées
+  ideas = scrap(keyword)
+  # Afficher les idées ( display_list(array of hash) )
+  # Demander à l'utilisateur quelle idée il choisit
+  # Ajouter l'idée dans ma gifts_list
+end
 
 
 
