@@ -1,3 +1,4 @@
+require 'csv'
 require_relative 'scrapper.rb'
 
 def display_list(gifts_list)
@@ -45,7 +46,7 @@ def add_gift(gifts_list)
 
   # Ajouter un cadeau à la gift_list
   gifts_list << gift
-
+  save_csv(gifts_list)
 end
 
 def delete_gift(gifts_list)
@@ -57,6 +58,7 @@ def delete_gift(gifts_list)
   # Récupérer l'index du cadeau à supprimer - attention au -1
   gifts_list.delete_at(index)
   # Supprimer sur l'array/gifts_list.delete_at(index)
+  save_csv(gifts_list)
 end
 
 
@@ -72,17 +74,57 @@ def mark_as_bought(gifts_list)
   gift[:bought] = true
   # gifts_list[index][:bought] = true
   # Mettre à jour le gift/Hash , mettre à jour la valeur de sa clé [:bought]
+  save_csv(gifts_list)
 end
 
 
 def import(gifts_list)
   # Demander à l'utilisateur le mot clé recherché
+  puts "What are you looking for ?"
+  keyword = gets.chomp
   # Scrapper Etsy pour avoir une liste d'idées
   ideas = scrap(keyword)
   # Afficher les idées ( display_list(array of hash) )
+  display_list(ideas)
   # Demander à l'utilisateur quelle idée il choisit
+  puts "What is the number of the idea you want to add ?"
+  index = gets.chomp.to_i - 1
+  idea = ideas[index ]
   # Ajouter l'idée dans ma gifts_list
+  gifts_list << idea
+  save_csv(gifts_list)
 end
 
 
+def load_csv
+  csv_options = { col_sep: ',', quote_char: '"', headers: :first_row }
+  filepath    = 'gifts.csv'
+  gifts = []
+
+  CSV.foreach(filepath, csv_options) do |row|
+    # TODO: build new gift from information stored in each row
+    gift = {
+      name: row[0],
+      price: row[1].to_i,
+      bought: row[2] == "true"
+    }
+    gifts << gift
+  end
+  return gifts
+  # => Array of hash
+end
+
+def save_csv(gifts_list)
+  csv_options = { col_sep: ',', force_quotes: true, quote_char: '"' }
+  filepath    = 'gifts.csv'
+
+  CSV.open(filepath, 'wb', csv_options) do |csv|
+    # We had headers to the CSV
+    csv << ['name', 'price', 'bought']
+    #TODO: store each gift
+    gifts_list.each do |gift|
+      csv << [gift[:name], gift[:price], gift[:bought]]
+    end
+  end
+end
 
